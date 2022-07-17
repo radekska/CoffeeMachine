@@ -4,15 +4,15 @@ import (
 	"testing"
 )
 
-func TestIngredientCalculator(t *testing.T) {
-	var expectedWater, expectedMilk, expectedCoffeeBeans = 46800, 11700, 3510
-	cups := 234
-	var water, milk, coffeeBeans = ingredientCalculator(cups)
+func TestCalculateAvailableCoffees(t *testing.T) {
+	ingredients := NewIngredients(1000, 500, 50)
+	expectedCoffees := 3
 
-	if expectedWater != water || expectedMilk != milk || expectedCoffeeBeans != coffeeBeans {
-		t.Errorf("FAILED expected: %d %d %d, given: %d %d %d", expectedWater,
-			expectedMilk, expectedCoffeeBeans, water, milk, coffeeBeans)
+	availableCoffees := calculateAvailableCoffees(ingredients)
+
+	if availableCoffees != expectedCoffees {
+		t.Errorf("FAILED expected: %d, given %d", expectedCoffees, availableCoffees)
 	} else {
-		t.Log("SUCCESS")
+		t.Logf("SUCCESS expected: %d, given %d", expectedCoffees, availableCoffees)
 	}
 }
