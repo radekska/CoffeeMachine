@@ -1,4 +1,4 @@
-package coffeeMachine
+package main
 
 import "fmt"
 
@@ -7,7 +7,7 @@ func ingredientCalculator(cups int) (int, int, int) {
 	return water, milk, coffeeBeans
 }
 
-func coffeeMachine() {
+func main() {
 	fmt.Print("Write how many cups of coffee you will need:\n> ")
 	var cups int
 	_, err := fmt.Scan(&cups)
