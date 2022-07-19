@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -10,9 +11,5 @@ func TestCalculateAvailableCoffees(t *testing.T) {
 
 	availableCoffees := calculateAvailableCoffees(ingredients)
 
-	if availableCoffees != expectedCoffees {
-		t.Errorf("FAILED expected: %d, given %d", expectedCoffees, availableCoffees)
-	} else {
-		t.Logf("SUCCESS expected: %d, given %d", expectedCoffees, availableCoffees)
-	}
+	assert.Equal(t, expectedCoffees, availableCoffees, "Should be equal.")
 }
