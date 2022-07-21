@@ -5,89 +5,47 @@ import (
 	"strings"
 )
 
-const (
-	waterPerCoffee = 200
-	milkPerCoffee  = 50
-	beansPerCoffee = 15
-)
-
-type Ingredients struct {
+type CoffeeMachineSupplies struct {
 	water       int
 	milk        int
 	coffeeBeans int
-}
-
-type CoffeeMachineSupplies struct {
-	ingredients Ingredients
 	cups        int
 	money       int
 }
 
-func NewCoffeeMachineSupplies(ingredients Ingredients, cups int, money int) CoffeeMachineSupplies {
-	return CoffeeMachineSupplies{ingredients: ingredients, cups: cups, money: money}
-}
-
-func NewIngredients(water int, milk int, coffeeBeans int) Ingredients {
-	return Ingredients{
-		water:       water,
-		milk:        milk,
-		coffeeBeans: coffeeBeans,
-	}
-}
-
-var singleCoffeeIngredients = NewIngredients(waterPerCoffee, milkPerCoffee, beansPerCoffee)
-
-func calculateAvailableCoffees(currentIngredients Ingredients) int {
-	availableWater := currentIngredients.water / singleCoffeeIngredients.water
-	availableMilk := currentIngredients.milk / singleCoffeeIngredients.milk
-	availableCoffeeBeans := currentIngredients.coffeeBeans / singleCoffeeIngredients.coffeeBeans
-	availableIngredients := [3]int{availableWater, availableMilk, availableCoffeeBeans}
-
-	minimal := availableIngredients[0]
-	for _, availableIngredient := range availableIngredients {
-		if availableIngredient < minimal {
-			minimal = availableIngredient
-		}
-	}
-	return minimal
-}
-
-func getInput(value int) {
-	_, err := fmt.Scan(&value)
-	if err != nil {
-		fmt.Println(err)
-	}
+func NewCoffeeMachineSupplies(water int, milk int, coffeeBeans int, cups int, money int) CoffeeMachineSupplies {
+	return CoffeeMachineSupplies{water: water, milk: milk, coffeeBeans: coffeeBeans, cups: cups, money: money}
 }
 
 func getCoffeeMachineState(coffeeMachineSupplies CoffeeMachineSupplies) string {
 	var messages = []string{"The coffee machine has:", "%d ml of water", "%d ml of milk", "%d g of coffee beans",
 		"%d disposable cups", "$%d of money"}
 	message := strings.Join(messages, "\n")
-	return fmt.Sprintf(message, coffeeMachineSupplies.ingredients.water, coffeeMachineSupplies.ingredients.milk,
-		coffeeMachineSupplies.ingredients.coffeeBeans, coffeeMachineSupplies.cups, coffeeMachineSupplies.money)
+	return fmt.Sprintf(message, coffeeMachineSupplies.water, coffeeMachineSupplies.milk,
+		coffeeMachineSupplies.coffeeBeans, coffeeMachineSupplies.cups, coffeeMachineSupplies.money)
 }
 
 const (
-	espresso   = iota
-	latte      = iota
-	cappuccino = iota
+	espresso = iota + 1
+	latte
+	cappuccino
 )
 
 func makeCoffee(coffeeMachineSupplies *CoffeeMachineSupplies, option int) {
 	switch option {
 	case espresso:
-		coffeeMachineSupplies.ingredients.water -= 250
-		coffeeMachineSupplies.ingredients.coffeeBeans -= 16
+		coffeeMachineSupplies.water -= 250
+		coffeeMachineSupplies.coffeeBeans -= 16
 		coffeeMachineSupplies.money += 4
 	case latte:
-		coffeeMachineSupplies.ingredients.water -= 350
-		coffeeMachineSupplies.ingredients.milk -= 75
-		coffeeMachineSupplies.ingredients.coffeeBeans -= 20
+		coffeeMachineSupplies.water -= 350
+		coffeeMachineSupplies.milk -= 75
+		coffeeMachineSupplies.coffeeBeans -= 20
 		coffeeMachineSupplies.money += 7
 	case cappuccino:
-		coffeeMachineSupplies.ingredients.water -= 200
-		coffeeMachineSupplies.ingredients.milk -= 100
-		coffeeMachineSupplies.ingredients.coffeeBeans -= 12
+		coffeeMachineSupplies.water -= 200
+		coffeeMachineSupplies.milk -= 100
+		coffeeMachineSupplies.coffeeBeans -= 12
 		coffeeMachineSupplies.money += 6
 	}
 	if option == espresso || option == latte || option == cappuccino {
@@ -97,9 +55,9 @@ func makeCoffee(coffeeMachineSupplies *CoffeeMachineSupplies, option int) {
 }
 
 func fillCoffeeMachineSupplies(coffeeMachineSupplies *CoffeeMachineSupplies, water int, milk int, coffeeBeans int, cups int) {
-	coffeeMachineSupplies.ingredients.water += water
-	coffeeMachineSupplies.ingredients.milk += milk
-	coffeeMachineSupplies.ingredients.coffeeBeans += coffeeBeans
+	coffeeMachineSupplies.water += water
+	coffeeMachineSupplies.milk += milk
+	coffeeMachineSupplies.coffeeBeans += coffeeBeans
 	coffeeMachineSupplies.cups += cups
 }
 
@@ -116,9 +74,9 @@ const (
 )
 
 func writeAction(coffeeMachineSupplies *CoffeeMachineSupplies) {
-	fmt.Println("Write action (buy, fill, take):")
+	fmt.Println("\nWrite action (buy, fill, take):")
 	var action string
-	fmt.Scanf("%s", &action)
+	fmt.Scan(&action)
 
 	switch action {
 	case buy:
@@ -126,12 +84,29 @@ func writeAction(coffeeMachineSupplies *CoffeeMachineSupplies) {
 		var coffee int
 		fmt.Scanf("%d", &coffee)
 		makeCoffee(coffeeMachineSupplies, coffee)
+	case fill:
+		var water, milk, coffeeBeans, cups int
+		fmt.Println("Write how many ml of water you want to add:")
+		fmt.Scan(&water)
+		fmt.Println("Write how many ml of milk you want to add:")
+		fmt.Scan(&milk)
+		fmt.Println("Write how many grams of coffee beans you want to add:")
+		fmt.Scan(&coffeeBeans)
+		fmt.Println("Write how many disposable cups of coffee you want to add:")
+		fmt.Scan(&cups)
+		fillCoffeeMachineSupplies(coffeeMachineSupplies, water, milk, coffeeBeans, cups)
+	case take:
+		var money = coffeeMachineSupplies.money
+		takeMoneyFromCoffeeMachine(coffeeMachineSupplies, coffeeMachineSupplies.money)
+		fmt.Printf("I gave you $%d\n", money)
 	}
+	fmt.Println()
 }
 
 func main() {
-	coffeeMachineSupplies := NewCoffeeMachineSupplies(NewIngredients(400, 540, 120), 9, 550)
+	coffeeMachineSupplies := NewCoffeeMachineSupplies(400, 540, 120, 9, 550)
 	fmt.Println(getCoffeeMachineState(coffeeMachineSupplies))
 	writeAction(&coffeeMachineSupplies)
 	fmt.Println(getCoffeeMachineState(coffeeMachineSupplies))
+
 }
