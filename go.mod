@@ -1,4 +1,4 @@
-module CoffeeMachine
+module coffeemachine
 
 go 1.18
 
