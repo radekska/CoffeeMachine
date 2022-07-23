@@ -26,12 +26,13 @@ func getCoffeeMachineState(coffeeMachineSupplies CoffeeMachineSupplies) string {
 }
 
 const (
-	espresso = iota + 1
-	latte
-	cappuccino
+	espresso   = "1"
+	latte      = "2"
+	cappuccino = "3"
+	back       = "back"
 )
 
-func makeCoffee(coffeeMachineSupplies *CoffeeMachineSupplies, option int) {
+func makeCoffee(coffeeMachineSupplies *CoffeeMachineSupplies, option string) {
 	switch option {
 	case espresso:
 		coffeeMachineSupplies.water -= 250
@@ -51,7 +52,6 @@ func makeCoffee(coffeeMachineSupplies *CoffeeMachineSupplies, option int) {
 	if option == espresso || option == latte || option == cappuccino {
 		coffeeMachineSupplies.cups -= 1
 	}
-
 }
 
 func fillCoffeeMachineSupplies(coffeeMachineSupplies *CoffeeMachineSupplies, water int, milk int, coffeeBeans int, cups int) {
@@ -68,45 +68,68 @@ func takeMoneyFromCoffeeMachine(coffeeMachineSupplies *CoffeeMachineSupplies, mo
 }
 
 const (
-	buy  = "buy"
-	fill = "fill"
-	take = "take"
+	buy       = "buy"
+	fill      = "fill"
+	take      = "take"
+	remaining = "remaining"
+	exit      = "exit"
 )
 
-func writeAction(coffeeMachineSupplies *CoffeeMachineSupplies) {
-	fmt.Println("\nWrite action (buy, fill, take):")
+func makeCoffeeAction(coffeeMachineSupplies *CoffeeMachineSupplies) {
+	fmt.Println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:")
+	var coffeeOption string
+	fmt.Scanf("%s", &coffeeOption)
+	if coffeeOption == back {
+		return
+	}
+	makeCoffee(coffeeMachineSupplies, coffeeOption)
+}
+
+func fillCoffeeMachineSuppliesAction(coffeeMachineSupplies *CoffeeMachineSupplies) {
+	var water, milk, coffeeBeans, cups int
+	fmt.Println("Write how many ml of water you want to add:")
+	fmt.Scan(&water)
+	fmt.Println("Write how many ml of milk you want to add:")
+	fmt.Scan(&milk)
+	fmt.Println("Write how many grams of coffee beans you want to add:")
+	fmt.Scan(&coffeeBeans)
+	fmt.Println("Write how many disposable cups of coffee you want to add:")
+	fmt.Scan(&cups)
+	fillCoffeeMachineSupplies(coffeeMachineSupplies, water, milk, coffeeBeans, cups)
+}
+
+func takeMoneyFromCoffeeMachineAction(coffeeMachineSupplies *CoffeeMachineSupplies) {
+	var money = coffeeMachineSupplies.money
+	takeMoneyFromCoffeeMachine(coffeeMachineSupplies, coffeeMachineSupplies.money)
+	fmt.Printf("I gave you $%d\n", money)
+}
+
+func actionDispatcher(coffeeMachineSupplies *CoffeeMachineSupplies) int {
+	fmt.Println("Write action (buy, fill, take, remaining, exit):")
 	var action string
 	fmt.Scan(&action)
 
 	switch action {
 	case buy:
-		fmt.Println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:")
-		var coffee int
-		fmt.Scanf("%d", &coffee)
-		makeCoffee(coffeeMachineSupplies, coffee)
+		makeCoffeeAction(coffeeMachineSupplies)
 	case fill:
-		var water, milk, coffeeBeans, cups int
-		fmt.Println("Write how many ml of water you want to add:")
-		fmt.Scan(&water)
-		fmt.Println("Write how many ml of milk you want to add:")
-		fmt.Scan(&milk)
-		fmt.Println("Write how many grams of coffee beans you want to add:")
-		fmt.Scan(&coffeeBeans)
-		fmt.Println("Write how many disposable cups of coffee you want to add:")
-		fmt.Scan(&cups)
-		fillCoffeeMachineSupplies(coffeeMachineSupplies, water, milk, coffeeBeans, cups)
+		fillCoffeeMachineSuppliesAction(coffeeMachineSupplies)
 	case take:
-		var money = coffeeMachineSupplies.money
-		takeMoneyFromCoffeeMachine(coffeeMachineSupplies, coffeeMachineSupplies.money)
-		fmt.Printf("I gave you $%d\n", money)
+		takeMoneyFromCoffeeMachineAction(coffeeMachineSupplies)
+	case remaining:
+		fmt.Println(getCoffeeMachineState(*coffeeMachineSupplies))
+	case exit:
+		return 1
 	}
-	fmt.Println()
+	return 0
 }
 
 func main() {
 	coffeeMachineSupplies := NewCoffeeMachineSupplies(400, 540, 120, 9, 550)
-	fmt.Println(getCoffeeMachineState(coffeeMachineSupplies))
-	writeAction(&coffeeMachineSupplies)
-	fmt.Println(getCoffeeMachineState(coffeeMachineSupplies))
-
+	for true {
+		state := actionDispatcher(&coffeeMachineSupplies)
+		if state == 1 {
+			break
+		}
+	}
 }
