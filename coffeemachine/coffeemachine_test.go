@@ -68,8 +68,8 @@ func TestCoffeeMakerDispatcher(t *testing.T) {
 		{NewCoffeeMachineSupplies(300, 0, 50, 5, 0), Espresso, "I have enough resources, making you a coffee!\n"},
 		{NewCoffeeMachineSupplies(0, 0, 0, 0, 0), Latte, "Sorry, not enough water!\n"},
 	}
-	log.SetFlags(0)
 	// TODO - add cases for the rest of coffees
+	log.SetFlags(0)
 	for _, tt := range tests {
 		testName := fmt.Sprintf("%d,%s", tt.supplies, tt.option)
 		t.Run(testName, func(t *testing.T) {

@@ -35,7 +35,7 @@ const (
 	Espresso   = "1"
 	Latte      = "2"
 	Cappuccino = "3"
-	Back       = "Back"
+	Back       = "back"
 )
 
 type Coffee struct {
@@ -125,9 +125,8 @@ const (
 )
 
 func makeCoffeeAction(supplies *Supplies) {
-	log.Println("What do you want to buy? 1 - espresso, 2 - Latte, 3 - cappuccino, Back - to main menu:")
-	var coffeeOption string
-	fmt.Scanf("%s", &coffeeOption)
+	log.Println("What do you want to buy? 1 - espresso, 2 - Latte, 3 - cappuccino, back - to main menu:")
+	coffeeOption := GetStringInput()
 	if coffeeOption == Back {
 		return
 	}
@@ -135,15 +134,14 @@ func makeCoffeeAction(supplies *Supplies) {
 }
 
 func fillCoffeeMachineSuppliesAction(supplies *Supplies) {
-	var water, milk, coffeeBeans, cups int
 	log.Println("Write how many ml of water you want to add:")
-	fmt.Scan(&water)
+	water := GetIntInput()
 	log.Println("Write how many ml of milk you want to add:")
-	fmt.Scan(&milk)
+	milk := GetIntInput()
 	log.Println("Write how many grams of coffee beans you want to add:")
-	fmt.Scan(&coffeeBeans)
+	coffeeBeans := GetIntInput()
 	log.Println("Write how many disposable cups of coffee you want to add:")
-	fmt.Scan(&cups)
+	cups := GetIntInput()
 	FillCoffeeMachineSupplies(supplies, water, milk, coffeeBeans, cups)
 }
 
@@ -155,8 +153,7 @@ func takeMoneyFromCoffeeMachineAction(supplies *Supplies) {
 
 func ActionDispatcher(supplies *Supplies) int {
 	log.Println("Write action (buy, fill, take, remaining, exit):")
-	var action string
-	fmt.Scan(&action)
+	action := GetStringInput()
 
 	switch action {
 	case buy:
