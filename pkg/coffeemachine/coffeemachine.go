@@ -1,6 +1,7 @@
 package coffeemachine
 
 import (
+	"coffeemachine/pkg/helpers"
 	"fmt"
 	"log"
 	"strings"
@@ -126,7 +127,7 @@ const (
 
 func makeCoffeeAction(supplies *Supplies) {
 	log.Println("What do you want to buy? 1 - espresso, 2 - Latte, 3 - cappuccino, back - to main menu:")
-	coffeeOption := GetStringInput()
+	coffeeOption := helpers.GetStringInput()
 	if coffeeOption == Back {
 		return
 	}
@@ -135,13 +136,13 @@ func makeCoffeeAction(supplies *Supplies) {
 
 func fillCoffeeMachineSuppliesAction(supplies *Supplies) {
 	log.Println("Write how many ml of water you want to add:")
-	water := GetIntInput()
+	water := helpers.GetIntInput()
 	log.Println("Write how many ml of milk you want to add:")
-	milk := GetIntInput()
+	milk := helpers.GetIntInput()
 	log.Println("Write how many grams of coffee beans you want to add:")
-	coffeeBeans := GetIntInput()
+	coffeeBeans := helpers.GetIntInput()
 	log.Println("Write how many disposable cups of coffee you want to add:")
-	cups := GetIntInput()
+	cups := helpers.GetIntInput()
 	FillCoffeeMachineSupplies(supplies, water, milk, coffeeBeans, cups)
 }
 
@@ -153,7 +154,7 @@ func takeMoneyFromCoffeeMachineAction(supplies *Supplies) {
 
 func ActionDispatcher(supplies *Supplies) int {
 	log.Println("Write action (buy, fill, take, remaining, exit):")
-	action := GetStringInput()
+	action := helpers.GetStringInput()
 
 	switch action {
 	case buy:

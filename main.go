@@ -1,7 +1,7 @@
 package main
 
 import (
-	"coffeemachine/coffeemachine"
+	"coffeemachine/pkg/coffeemachine"
 	"log"
 )
 

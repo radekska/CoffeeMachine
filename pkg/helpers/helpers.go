@@ -1,4 +1,4 @@
-package coffeemachine
+package helpers
 
 import "fmt"
 
